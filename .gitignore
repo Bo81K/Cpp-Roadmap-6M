@@ -6,3 +6,17 @@ build/
 *.ilk
 *.o
 compile_commands.json
+
+algoritms/*
+!algoritms/*.cpp
+!algoritms/*.h
+c_bridge/*
+!c_bridge/*.cpp
+!c_bridge/*.h
+cpp_core/*
+!cpp_core/*.cpp
+!cpp_core/*.h
+projects/*
+!projects/*.cpp
+!projects/*.h
+!projects/Makefile
