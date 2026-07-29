@@ -12,6 +12,7 @@ algoritms/*
 !algoritms/*.h
 c_bridge/*
 !c_bridge/*.cpp
+!c_bridge/*.c
 !c_bridge/*.h
 cpp_core/*
 !cpp_core/*.cpp
