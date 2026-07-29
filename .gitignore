@@ -1,0 +1,8 @@
+build/
+*.exe
+*.out
+*.obj
+*.pdb
+*.ilk
+*.o
+compile_commands.json
