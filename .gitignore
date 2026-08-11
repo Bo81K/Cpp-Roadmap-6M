@@ -8,17 +8,7 @@
 *.exe
 *.out
 *.app
-binary_search
-binary_search_recall
-recursion
-vector_app
-array_pointer
-hello_c
-malloc_demo
-strings
-structs
-sum_c
-vector
+
 # Файлы отладки и временные файлы
 *.pdb
 *.ilk
