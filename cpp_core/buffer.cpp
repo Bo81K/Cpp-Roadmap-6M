@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cstddef>
+#include <fstream>
+#include <string>
 
 class Buffer {
 public:
@@ -13,6 +15,9 @@ public:
     void print() const;
     Buffer(const Buffer& other);
     Buffer& operator = (const Buffer& other);
+
+    bool saveToFile(const std::string &filename) const;
+    bool loadFromFile(const std::string &filename);
 
 private:
     int* data_;
@@ -97,6 +102,48 @@ void Buffer::print() const
     std::cout<< "]\n";
 }
 
+bool Buffer::saveToFile(const std::string &filename) const
+{
+    std::ofstream out(filename, std::ios::binary); // запись
+    if (!out.is_open())
+    {
+        std::cout << "Error: cannot open file for writting\n";
+        return false;
+    }
+
+    out.write(reinterpret_cast<const char *>(&size_), sizeof(size_));
+
+    // Откуда: сам массив (приведённый к указателю на байты)
+    // Сколько: количество элементов * размер одного элемента (int)
+    out.write(reinterpret_cast<const char *>(data_), size_ * sizeof(int));
+
+    out.close();
+    return true;
+}
+
+bool Buffer::loadFromFile(const std::string &filename)
+{
+    std::ifstream in(filename, std::ios::binary);
+    if (!in.is_open())
+    {
+        std::cout << "Error: cannot open file for reading\n";
+        return false;
+    }
+
+    size_t newSize;
+    in.read(reinterpret_cast<char *>(&newSize), sizeof(newSize));
+
+    delete[] data_;
+
+    size_ = newSize;
+    data_ = new int[size_];
+
+    in.read(reinterpret_cast<char *>(data_), size_ * sizeof(int));
+
+    in.close();
+    return true;
+}
+
 // Проверка
 void testFunction() 
 {
@@ -137,6 +184,20 @@ int main()
     buf1.print();
     std::cout << "buf2: ";
     buf2.print();
-    
+
+    std::cout << "\n=== Testing File I/O ===\n";
+    Buffer fileBuf(3);
+    fileBuf.set(0, 77);
+    fileBuf.set(1, 88);
+    fileBuf.set(2, 99);
+
+    fileBuf.saveToFile("test_buffer.bin");
+
+    Buffer emptyBuf(1);
+    emptyBuf.loadFromFile("test_buffer.bin");
+
+    std::cout << "Loaded from file: ";
+    emptyBuf.print();
+
     return 0;
 }
