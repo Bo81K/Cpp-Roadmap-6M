@@ -4,51 +4,45 @@
 class Shape {
 public:
     Shape();
-    ~Shape();
+    virtual ~Shape();
 
-    double area() const;
-    void print () const;
+    virtual double area() const = 0;
+    virtual void print() const = 0;
 
-protected:
+    // protected:
     // поля protected доступны классу и его наследникам
     // но не доступны снаружи
     // double area_ = 0.0;
     // в данном примере area_ не используется
 };
 
-Shape::Shape() {
+Shape::Shape()
+{
     std::cout << "Shape constructor\n";
 }
 
-Shape::~Shape() {
+Shape::~Shape()
+{
     std::cout << "Shape destructor\n";
 }
 
-double Shape::area() const {
-    return 0.0;
-}
-
-void Shape::print() const {
-    std::cout << "Unknown shape\n";
-}
-
-class Rectangle : public Shape {
+class Rectangle : public Shape
+{
 public:
     Rectangle(double width, double height);
-    ~Rectangle();
+    ~Rectangle() override;
 
     // переопределяем методы
-    double area() const;
-    void print() const;
+    double area() const override;
+    void print() const override;
 
 private:
     double width_;
     double height_;
 };
 
-
-
-Rectangle::Rectangle(double width, double height) {
+Rectangle::Rectangle(double width, double height)
+{
     std::cout << "Rectangle constructor\n";
     width_ = width;
     height_ = height;
@@ -56,26 +50,65 @@ Rectangle::Rectangle(double width, double height) {
     // area_ = width_ * height_;
 }
 
-Rectangle::~Rectangle(){
+Rectangle::~Rectangle()
+{
     std::cout << "Rectangle destructor\n";
 }
 
-double Rectangle::area() const{
+double Rectangle::area() const
+{
     return width_ * height_;
 }
 
-void Rectangle::print() const {
+void Rectangle::print() const
+{
     std::cout << "Rectangle " << width_ << "x" << height_ << " with area:"
-                << area() << "\n";
+              << area() << "\n";
 }
 
-int main(){
-    // Shape s;
-    // s.print();
+// Наследник 2
+class Circle : public Shape
+{
+private:
+    double radius_;
 
-    Rectangle rect (5.0, 3.0);
-    rect.print();
-    std::cout << "Area: " << rect.area() << "\n";
+public:
+    Circle(double radius) : radius_(radius)
+    {
+        std::cout << "Circle constructor\n";
+    }
+    ~Circle() override { std::cout << "Circle destructor\n"; }
+
+    double area() const override { return 3.14159 * radius_ * radius_; }
+    void print() const override { std::cout << "Circle radius = " << radius_ << "\n"; }
+};
+
+int main()
+{
+    // попытка создания экземпляра абстрактного класса
+    // Shape s; error: cannot declare variable ‘s’ to be of abstract type ‘Shape’
+
+    // массив указателей на БАЗОВЫЙ класс
+    Shape *shapes[2];
+
+    shapes[0] = new Rectangle(5.0, 3.0);
+    shapes[1] = new Circle(2.0);
+
+    std::cout << "\n Processing Shapes \n";
+    for (int i = 0; i < 2; ++i)
+    {
+        // хотя указатель имеет тип Shape,
+        // вызывается правильный метод (Rectangle или Circle)
+        shapes[i]->print();
+        std::cout << "Area: " << shapes[i]->area() << "\n";
+    }
+
+    std::cout << "\n Cleanup \n";
+    for (int i = 0; i < 2; ++i)
+    {
+        delete shapes[i];
+    }
+
     return 0;
 }
 
@@ -83,10 +116,21 @@ int main(){
 
 Shape constructor
 Rectangle constructor
+Shape constructor
+Circle constructor
+
+ Processing Shapes
 Rectangle 5x3 with area:15
 Area: 15
+Circle radius = 2
+Area: 12.5664
+
+ Cleanup
 Rectangle destructor
 Shape destructor
+Circle destructor
+Shape destructor
+
 
 Конструктор у нас идёт в прямом порядке, от базовой часи к наследнику
 Деструктор идёт в обратном порядке уничтожая сначала наследника, а потом базовую часть
