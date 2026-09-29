@@ -6,10 +6,13 @@ public:
     Shape();
     virtual ~Shape();
 
+    /*Даём понять, что у этого метода нет реализации в базовом классе.
+    Любой наследник ОБЯЗАН написать свою реализацию,
+    иначе он тоже станет абстрактным*/
     virtual double area() const = 0;
     virtual void print() const = 0;
 
-    // protected:
+protected:
     // поля protected доступны классу и его наследникам
     // но не доступны снаружи
     // double area_ = 0.0;
