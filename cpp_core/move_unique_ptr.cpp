@@ -19,7 +19,7 @@ int main() {
 
     std::cout << "ptr2: " << *ptr2 << "\n";
 
-    // Попытка скопировать не скомпилируется:
+    // std::unique_ptr нельзя скопировать (он владеет памятью единолично)
     // std::unique_ptr<std::string> ptr3 = ptr2;  // ОШИБКА КОМПИЛЯЦИИ
 
     std::unique_ptr<std::string> ptr3 = std::move(ptr2);

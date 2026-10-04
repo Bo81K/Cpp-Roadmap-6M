@@ -134,7 +134,7 @@ int main(){
     std::cout << "c after self-assignment: "; c.print();
 
     std::cout << "\nMyString в векторе\n";
-    
+
     std::vector<MyString> vec;
     
     // при расширении вектор будет ПЕРЕМЕЩАТЬ элементы, а не копировать    
